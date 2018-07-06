@@ -44,7 +44,7 @@
 ----
 
 ### 20161005
-
+----
 #### C++ Tutorial -- Type
 * category
 	- Static typing(writing code slower but running code faster)
@@ -166,9 +166,9 @@
 
 * String & Vector
 
-	- -|String|vector
-	--------|-------------------|---------------------------
-	lib|< string >|< vector >
+	- 	_ |String|vector
+		-----|-------|-------
+		lib|< string >|< vector >
 	
 	- there is no class called "std::string", however it is actually `std::basic_string<char>`. "String" is only template.
 
