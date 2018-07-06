@@ -81,7 +81,7 @@
 		- rvalue is supported by compiler itself
 		- it is actually a "name swap"
 		```c++
-		int   c = a+b; // c is a rvalue
+		int   c = a+b; // c is a value
 		int&  c = a+b; // this will cause compiler error 
 				// -> int& c is an alias so it needs some other declaration first
 		int&& c = a+b; // c is a rvalue reference. In memory stack, the names instead of the value swap ('c' <--> 'a+b')
