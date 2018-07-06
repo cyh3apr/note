@@ -70,7 +70,7 @@
 		a, b, c are lvalue while b+c is a rvalue
 
 * pointer
-	-	|\*|&
+	-	-|\*|&
 		--------------|--------------------|----------------------
 		type|dereference operator|reference operator
 		read as|'value pointed by'|'address of'
@@ -80,15 +80,13 @@
 	- `int&&` is a rvalue reference: `int&& b = c+d //c+d is a rvalue`
 		- rvalue is supported by compiler itself
 		- it is actually a "name swap"
-```c++
-				int   c = a+b; // c is a rvalue
-				int&  c = a+b; // this will cause compiler error 
-							   // -> int& c is an alias so it needs some other declaration first
-				int&& c = a+b; // c is a rvalue reference
-							   // in memory stack, the names instead of the value swap ('c' <--> 'a+b')
-```
-	
-	- int a[10]; -> a is a `const int *`
+		```c++
+		int   c = a+b; // c is a rvalue
+		int&  c = a+b; // this will cause compiler error 
+				// -> int& c is an alias so it needs some other declaration first
+		int&& c = a+b; // c is a rvalue reference. In memory stack, the names instead of the value swap ('c' <--> 'a+b')
+		```
+	- `int a[10];` -> a is a `const int *`
 		- `a[0] = *(a+0)`
 		- `a[1] = *(a+1)`
 	
@@ -101,7 +99,7 @@
 		- are pointers that point to a value that has no type (and thus also an undetermined length and undetermined dereference poroperties)
 		- limitation: the data pointed by them cannot be directly dereferneced, so we will always have to cast the address in the void pointer to some other pointer type that points to a concrete data type before dereferencing it.
 			- example
-```c++
+			```c++
 			void increase (void* data, int psize)
 			{
 				if(psize==sizeof(char))
@@ -111,7 +109,7 @@
 					++(*pchar);
 				}
 			}
-```
+			```
 		- `void* f(void*)` : `void*` in the parentheses means it needs an address (no matter what type this pointer points to), the outside `void*` means this function will return an address.
 	
 	- null pointer: A null pointer is a value that any pointer may take to represent that it is pointing to "nowhere".
@@ -127,7 +125,6 @@
 					-> so the difference between the address of a and the address of the array is large since a is stored in stack (high) while the array is sotred in heap.(low)
 				- need to `delete[] a` after done using these memory
 				- `delete a` only delete the memory of the pointer not the memory of the array
-
 			- replacement
 				- example:
 					- `int a[10][10]` => `int* *a = new int* [10];`
@@ -146,7 +143,7 @@
 
 	- function pointer
 		- example
-```c++
+		```c++
 		int add(int a, int b);
 		(int)(*)(pf)(int, int) = add;
 		pf(5,6);
@@ -155,7 +152,7 @@
 		{
 			pf(_____);
 		}
-```
+		```
 
 * library
 	- namespace : boost->tr2->tr1->std
@@ -169,7 +166,7 @@
 
 * String & Vector
 
-	- |String|vector
+	- -|String|vector
 	--------|-------------------|---------------------------
 	lib|< string >|< vector >
 	
@@ -242,31 +239,30 @@ example code
 		add(3.5, 5.5, operator +);
 	}
 ```
-
 * Template Specialization
 	- type checking
-		example code
-```c++
-			template <typename T>
-			T add(T a, T b)
-			{
-				return a+b;
-			}
-			template <> //----> full specialization for (T == string)
-			std::string add(std::string a, std::string b)
-			{
-				cerr<<"not supported"; //the return type is string and the input type are all string, then return "not supported"
-			}
-			template <typename Q> //---> partial specialization
-			std::string add(Q a, Q b)
-			{
-				... //else if the return type is string but the input type are Q, do something different with the above
-			}
-```
+		- example code
+		```c++
+		template <typename T>
+		T add(T a, T b)
+		{
+			return a+b;
+		}
+		template <> //----> full specialization for (T == string)
+		std::string add(std::string a, std::string b)
+		{
+			cerr<<"not supported"; //the return type is string and the input type are all string, then return "not supported"
+		}
+		template <typename Q> //---> partial specialization
+		std::string add(Q a, Q b)
+		{
+			... //else if the return type is string but the input type are Q, do something different with the above
+		}
+		```
 
 * Type classification
 	- `template <typename Q>`
-	- `template <class Q> //can't be used for 'int' because 'int' is not a kind of class`
+	- `template <class Q>` can't be used for 'int' because 'int' is not a kind of class
 
 * `vector<int>` is a type ; `vector` is a template
 
@@ -296,25 +292,25 @@ example code
 
 * static member
 	- example
-```c++
-		class A
-		{
-			public: static int a(int, int);
-		};
-```
+	```c++
+	class A
+	{
+		public: static int a(int, int);
+	};
+	```
 	- in the example above, integer a is a global function.
 
 * special member function
 	- constructor
 		- there will be a default synthesized constructor. --> every bits are initialized to 0.
 		- can be write as other ways like:
-```c++
-			Q(int a1, int b1)
-			: a(a1), b(b1)
-			{
+	```c++
+	Q(int a1, int b1)
+	: a(a1), b(b1)
+	{
 
-			} //initialization list
-```
+	} //initialization list
+	```
 	- destructor
 		- form: `~$ClassName(){}`
 		- release used memory
@@ -327,24 +323,24 @@ example code
 		- synthesized copy constructior: bitwise copy
 		- It is better we use pointer-based copy constructor than synthesized one:
 			- example: (copy the value instead of address)
-```c++
-				Q(Q& q)
-				{
-					a = q.a;
-					ptr = new();
-					*ptr = *q.ptr;
-				}
-```
-	- assignment operator
-		- example
-```c++
-			Q& operator = (Q& q)
+			```c++
+			Q(Q& q)
 			{
 				a = q.a;
-				...
-				return *this;
+				ptr = new();
+				*ptr = *q.ptr;
 			}
-```
+			```
+	- assignment operator
+		- example
+		```c++
+		Q& operator = (Q& q)
+		{
+			a = q.a;
+			...
+			return *this;
+		}
+		```
 	- move constructor
 		- example: `Q (Q&& q) : a(std::move(q.a), std::move(q.b))){}`
 	- move assignment
@@ -352,18 +348,18 @@ example code
 * Friend class/function
 	- only defined in the class
 	- example code:
-```c++
-		class Q
-		{
-			private:
-				int a;
-			friend int add(Q); // this make function 'add' able to access the private members of Q
-			friend int B::add(int); // make friend with the function of the class
-			friend class C; // make friend with a class
-			/* cannot make friends with both of the class and the function of it */
-		}
-		int add(Q q){}; // this is a global function
-```
+	```c++
+	class Q
+	{
+		private:
+			int a;
+		friend int add(Q); // this make function 'add' able to access the private members of Q
+		friend int B::add(int); // make friend with the function of the class
+		friend class C; // make friend with a class
+		/* cannot make friends with both of the class and the function of it */
+	}
+	int add(Q q){}; // this is a global function
+	```
 
 * Operator overload
 	- operator can takes different amounts of parameter(unary/binary/ternary)
@@ -405,14 +401,13 @@ example code
 * when designing hash function, should consider the time complexity.
 * pair & tuple:
 	- example code
-```c++
-		pair <int, int> x;
-		x.first = ...; x.second = ...;
-
-		tuple <int, int, string, pair<int, int>> x;
-		x.get<0> = 3;
-		x.get<1> = 3;
-```
+	```c++
+	pair <int, int> x;
+	x.first = ...; x.second = ...;
+	tuple <int, int, string, pair<int, int>> x;
+	x.get<0> = 3;
+	x.get<1> = 3;
+	```
 
 ----
 ## Class Template
@@ -430,7 +425,7 @@ example code
 					- example: `template <class ... args>`
 * full specialization
 	- example code
-```c++
+	```c++
 	template <class T, class Q>
 	class my_container
 	{
@@ -441,7 +436,7 @@ example code
 	template < >
 	class my_container <int, vector<int>> //specializtion
 	{}; // do nothing
-```
+	```
 * partial specialization
 	- // please look into HW4/3.cpp -- hannoi tower
 
@@ -453,7 +448,7 @@ example code
 		- class Q is a template with parameter class a & class b. Class R cannot access class a & class b.
 * static recursion
 	example code : try to get something like `sum<10>::a` -> this value will be 55
-```c++
+	```c++
 	template <int K>
 	class sum
 	{
@@ -466,7 +461,7 @@ example code
 	public:
 		static const int a = 1;
 	}
-```
+	```
 * constant expression can replace template. (`constexpr`)
 
 ----
@@ -484,14 +479,14 @@ example code
 * `Traits` are useful when using template: 
 	`Q::value_type sum(Q &q){}` => the return type of this sum funcion will be the value_type of Q
 	- if you are using your own defined type, use `typedef`:
-```c++
-		template <class T>
-		class QQ
-		{
-			typedef T value_type;
-		}
-		QQ<int>::value_type --> this is 'int'
-```
+	```c++
+	template <class T>
+	class QQ
+	{
+		typedef T value_type;
+	}
+	QQ<int>::value_type --> this is 'int'
+	```
 
 ----
 
@@ -499,19 +494,17 @@ example code
 * is_type is a value not trait
 - example code
 ```c++
-	template <typename T>
-	class is_vector
-	{
-		static int value = false;
-	}
-
-	template <> //specialize for vector
-	class is_vector<vector<T>>
-	{
-		static int value = true;
-	}
-
-	is_vector< $sometype >::is_type --> this is a boolean value
+template <typename T>
+class is_vector
+{
+	static int value = false;
+}
+template <> //specialize for vector
+class is_vector<vector<T>>
+{
+	static int value = true;
+}
+is_vector< $sometype >::is_type --> this is a boolean value
 ```
 
 ----
@@ -520,13 +513,13 @@ example code
 * template can take any number of parameters
 * example of this kind of template: `std::tuple<int, int, float> a;`
 ```c++
-	template <class ... T> // "..." is called 'ellipsis' while 'T' is a parameter pack
-	class tuple
-	{};
+template <class ... T> // "..." is called 'ellipsis' while 'T' is a parameter pack
+class tuple
+{};
 
-	template <class ... T> //this "..." tells compiler that T is a parameter pack
-	void f(T ... a) // this "..." tells compiler to expand the parameter pack T
-	{}
+template <class ... T> //this "..." tells compiler that T is a parameter pack
+void f(T ... a) // this "..." tells compiler to expand the parameter pack T
+{}
 ```
 * three form of the position of the ellipsis
 ```c++
@@ -578,16 +571,17 @@ example code
 * try to make everything template and to make every type 'auto'
 * static member function example:
 ```c++
-	class test
-	{
-		static int get_value(){return 3;}
-	}
-	int main()
-	{
-		cout<<test::get_value()<<enld;
-	}
+class test
+{
+	static int get_value(){return 3;}
+}
+int main()
+{
+	cout<<test::get_value()<<enld;
+}
 ```
 * use <random> library in C++11 to generate random numbers
+
 ```c++
 	int main()
 	{
