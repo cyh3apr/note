@@ -49,10 +49,10 @@
  	- 中央極限定理(Central Litmit Theorem)：在適當的條件下，大量相互獨立隨機變數的均值經適當標準化後依分佈收斂於常態分佈。
  	- z-test VS t-test
  		- type | t-test | z-test
- 		----  | ---    | ---
- 		meaning| to identify how the means of two sets of data differ from one another when variance is not given | a hypotheses test which ascertains if the means of two datasets are different from each other when variance is given
- 		population variance | unknown | known
- 		sample size | small | large
+ 			----  | ----    | ----
+ 			meaning| to identify how the means of two sets of data differ from one another when variance is not given | a hypotheses test which ascertains if the means of two datasets are different from each other when variance is given
+ 			population variance | unknown | known
+ 			sample size | small | large
  	- others mentioned
  		- transposon: 又稱為跳躍基因，是一段DNA序列，其中有重複的序列，故結構不穩定。它可以從染色體DNA上單獨複製或斷裂，自己形成一個圈環保持結構的穩定，接著再插入其他染色體DNA序列中，影響其他位置的基因調控功能（可能發生於基因改變或重組）。
  			- type
