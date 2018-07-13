@@ -1,7 +1,5 @@
 ## 2016 C++ 
 
-### 20160921
-
 ----
 #### Memory
 - type
@@ -43,8 +41,6 @@
 	`int a = 5;` or `int a(5);` is faster than `int a; a=5;`
 ----
 
-### 20161005
-----
 #### C++ Tutorial -- Type
 * category
 	- Static typing(writing code slower but running code faster)
@@ -180,7 +176,7 @@
 
 ----
 
-##  call by value/reference/pointer
+####  call by value/reference/pointer
 * call by value: need copying
 * call by reference:
 	- saving copying (just reading)
@@ -190,14 +186,14 @@
 
 ----
 
-##  Recursion
+####  Recursion
 * design
 	1. condition for the termination
 	2. recursion equation
 		- example: `f(x) = f(x-1) + f(x-2)`
 ----
 
-##  Template & Function Overload
+####  Template & Function Overload
 example code
 ```c++
 	int add(int a, int b)
@@ -268,7 +264,7 @@ example code
 
 ----
 
-## Class
+#### Class
 - example code
 ```c++
 	class myclass
@@ -369,7 +365,7 @@ example code
 
 ----
 
-## Array
+#### Array
 * storing 'consecutive data'
 * types:
 	- static array : fixed size -> if the size is too large, will cause 'allocation failed'.
@@ -381,7 +377,7 @@ example code
 
 ----
 
-##  Linked List/ Tree/ Graph
+####  Linked List/ Tree/ Graph
 * Types:
 	- single linked list
 	- double linked list : for back & forth
@@ -393,7 +389,7 @@ example code
 
 ----
 
-## Hash
+#### Hash
 * hash table gurantees to get the data in constant time
 * hash function using '%' is slow. The recommended hash function is '&' and it's much faster than using '%'
 * collision policy shoud be built.
@@ -410,7 +406,8 @@ example code
 	```
 
 ----
-## Class Template
+
+#### Class Template
 * It is better to define and to implement funtion in template class together. However, it is better to separate function definition and function implementation in non-template class.
 * classification
 	- non-type:
@@ -466,7 +463,7 @@ example code
 
 ----
 
-## Traits 
+#### Traits 
 * Traits -> member types
 	- value_type
 	- allocator_type
@@ -490,7 +487,7 @@ example code
 
 ----
 
-## is_type
+#### is_type
 * is_type is a value not trait
 - example code
 ```c++
@@ -509,7 +506,7 @@ is_vector< $sometype >::is_type --> this is a boolean value
 
 ----
 
-## parameter pack (variadic template)
+#### parameter pack (variadic template)
 * template can take any number of parameters
 * example of this kind of template: `std::tuple<int, int, float> a;`
 ```c++
@@ -564,8 +561,381 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 	- example: `template<typename ... Ts, int ... N>`
 
 ----
+#### Basic Components
+- `std::pair`
+	- library: `#include < utility >`
+```c++
+	template <class T1, class T2>
+	class pair
+	{
+	public:
+		T1 first;
+		T2 second;
+	}
+
+	std::pair<int, double> my_data;
+	my_data.first = 5;
+	auto a = my_data.first; //or my_data.second
+	auto my_data_1 = std::make_pair(5,0.5); //let compiler guess which types are they
+	auto my_data_2 = std::make_pair<int, double>(5,0.5); //set the type manually
+```
+	- pair can only take two types, that is, the first one and the second one. If you need more than 2 types, then:
+		1. use static recursion like: `std::pair<int, std::pair<double, std::pair<>>> my_data;`
+		2. use `std::tuple` instead
+- `std::tuple`
+	- library: `#include < tuple >`
+```c++
+	template <class... Types>
+	class tuple
+	{
+		//...
+	}
+	tuple<int, int, int> data;
+	std::get<0>(data) = 5;
+	auto a = std::get<0>(data);
+```
+	- HW8 : use `std::get`
+	- to get the size of tuple : `tuple_size`
+		- example
+```c++
+		#include <iostream>
+		#include <tuple>
+		template <class T>
+		void test(T t)
+		{
+			//tuple size can be known without t (only need to know T)
+			int a[std::tuple_size<T>::value];
+			std::cout<<std::tuple_size<T>::value<<'\n';
+		}
+		int main()
+		{
+			test(std::make_tuple(1,2,3.14));
+		}
+```
+----
+
+#### Sequence Container
+- array, vector, deque, stack, queue...
+- array
+```c++
+	template<class T, std::size_t N>
+	class array {};
+	std::array<int, 4> a; // this is better than the declaration like 'int a[10]'
+	// 'a.front' can get the first element of array; 'a.back' can get the last one
+	// 'a.data()' is used to get the address of array. '&a' is not working in this place.
+```
+- vector
+```c++
+	template<class T, class Alloc = std::allocator<T>> //Alloc: relate to data alignment. (speed)
+														// std::allocator, boost::aligned_alloc...
+	class vector{};
+
+```
+	- `push_back()` is always 'called by value' since it copies the value before push it into the vector, however, `emplace_back()` directly construct with the element in the place
+	- `resize()` can be used when releasing the memory while `reserve()` can be used at the beginning to get the well-estimated amount of memory
+		- `resize()` may not only change the size of the data but the location of it.
+	- swap to release skill
+```c++
+	vector<int> b;
+	a = std::move(b); //Using 'a' is actually using 'b'
+```
+	- `std::swap`
+
+----
+#### Associative Container
+- `std::set`
+```c++
+	template<class T, class Comp = std::less<T>>, class Alloc = allocator<T>>
+	class set
+	{};
+
+	std::set<int> a {1,2,3,4,-1}
+```
+- `std::multiset` is like 'set'
+- `std::map` :
+	- datatype is 'pair' (<'key', 'value'>)
+	- get thing from map : use '.find($key)' and you will get the pointer to the data in return
+- unordered_map
+```c++
+	template<class key, class T, class Hash = hash<key>, class Equal = equal_to<key>, class Alloc = ...>
+```
+- iterator
+	- random access : <, >, <= / += / []
+	- 	- bidirectional: decremental `a--`, `--a`
+		-	- forward: multi_pass
+			-	- input ==/!=/\* -> rvalue
+				- output \* -> lvalue
+	- That `*a==*b` is true doesn't guarantee that `a==b` is true.
+
+----
+
+#### Concepts
+- in 'boost' library
+- make compiler error message more readable
+- example
+
+```c++
+	boost::concepts
+	template<class T> requires std::less<T>
+	T min(T x, T y)
+	{
+		//...
+	}
+```
+
+----
+
+#### Boost Traits
+
+----
+
+#### functor (function object)
+- be able to maintain states
+
+```c++
+class QQ
+{
+	int n=0;
+	int operator()(int a)
+	{
+		n++;
+		return a+n;
+	}
+}
+
+QQ q;
+q(0); //=> 1
+q(0); //=> 2
+```
+
+- lambda expression, function, functor, and function pointer are called *callable*. 
+- 'callback' function = the function is called by others
+
+----
+
+#### std algorithm
+- `for_each`
+	- take only one parameter (`UnaryFunction`)
+```c++
+struct Sum
+{
+	Sum(): sum(0){}
+	void operator()(int n){sum+=n;}
+	int sum;
+};
+// calls Sum::operator for each number
+Sum s = std::for_each(nums.begin(), nums.end(), Sum());
+```
+- range for: `for(auto&a : A)`
+- `std::transform`
+```c++
+template< class InputIt, class OutputIt, class UnaryOperation >
+OutputIt transform( InputIt first1, InputIt last1, OutputIt d_first,
+                    UnaryOperation unary_op );
+//to do: lower case-> upper case
+string a("abc");
+cap q;
+std::transform(a.begin(), a.end(), a.begin(), q)
+class cap
+{
+	char operator()(char a)
+	{
+		return a-26;
+	}
+}
+```
+- `copy`
+- `std::unique`
+	- size will be the same: (1,2,1,3,1,4) -> (1,2,3,4,0,0,0), so should be careful to resize it.
+- c-style `qsort` is slower than cplusplus-style `sort` since `qsort` needs to dereference the funtion and value while `sort` doesn't need to do that(use template, functor).
+
+----
+
+#### Lambda Expression
+- book *C++11/14 Boost*: page 31
+- anonymous functor (without specific name)
+- `[]` usually it sees as an identifier, however, in lambda, we keep it empty.
+- the type of lambda funtion : `std::function`
+- cannot be reused
+- example
+```c++
+[](int a, int b)->int//return type: int
+{
+	return a+b;
+}(3,5);
+/*-----------------------*/
+int a=5;
+[a](int b)
+{
+	return b+a; //a: pass by value
+}(3); //b is 3
+/*-----------------------*/
+int a=5;
+[&a](int b)
+{
+	return b+a; //a: called by reference
+}(3);
+/*-----------------------*/
+[=](int b)
+{
+	return b+a;
+}(3);
+/*-----------------------*/
+//if you write a lambda function in a class, adding "this" in the bracket will allow you to reach all the variables in that class 
+[this]() //or [*this]()
+{
+	//...
+}
+```
+- generic lambda c++11
+- in c++14
+```c++
+[](auto a, auto b)->auto
+{
+	return a+b; 
+}(3, 5);
+
+auto a = [](auto a, auto b){return a+b;};
+
+std::function<int(int, int)> //use 'std::function<$return_type(parameters)>' to wrap the function
+a = [](int a, int b){return a+b;}; // like giving a name "a" to the function
+a(3,5); //usage
+```
+- do initialization in brackets
+```c++
+int x=4;
+cout<<[&r=x, &x](){return r+x;}(); //4+4
+cout<<[&r=x, x=x+1](){return r+x;}(); //4+5, in 'x=x+1', the first x is new x while the x in the right is the original x as outside.
+```
+----
+
+#### std::function / std::bind / std::thread
+- function
+```c++
+int (*f)(int, int) = sum;
+std::function<int (int, int)>
+a = [](int a, int b){return a+b;}; // a is a function
+a = f; //rename the function
+auto a = &sum;
+```
+
+- bind
+	- always use 'pass_by_value'. If needed, can use `std::ref`(example is shown below)
+```c++
+auto a = std::bind(sum, 3, 5); // sum: callable
+a(); //-> actually do sum(3,5);
+/**********************************/
+auto b = std::bind(sum, 1); // sum: callable
+b(6); //-> do sum(1,6)
+/**********************************/
+int sum_minus(int a, int b, int c)
+{
+	return a+b-c;
+}
+auto c = std:bind(sum_minus, 1, 2);
+a(3); //-> do sum(1,2,3) -> 1+2-3
+/**********************************/
+auto d = std::bind(sum_minus, std::place_holder::_3, std::place_holder::_2, std::place_holder::_1);
+d(1,2,3); //-> sum(3,2,1) => the first parameter will go to place_holder::_1
+/**********************************/
+//if sum is a member function in class QQ
+auto c = std:bind(&QQ::sum, 1, 2);
+/**********************************/
+void increment(int& a, int& b)
+{
+	a++; b++;
+}
+auto a = bind(increment);
+int b = 3; int c = 4;
+a(b,c);
+cout<<b<<c; //still output "34" not "45" since bind always use pass_by_value
+a(std::ref(b), std::ref(c));
+cout<<b<<c; // output "45"
+```
+- thread
+	- like `bind`, always pass_by_value(need to copy)
+```c+
+vector<vector<int>> all_vector(10);
+void sort_vector(vector<int>&){}
+
+for_each(all_vector.begin(), all_vector,end(), [](auto job){std::thread(sort_vector, job);};
+//the above is same as the below
+for(auto&a : all_vector)
+	std::thread(sort_vector, a);
+```
+	- thread can't make sure when all the job will be done
+		- add `t.join();` //t is a thread
+
+----
+
+#### C++ object model/inheritance (virtual, polymorphism)
+- inheritance
+```c++
+class A
+{
+public:
+	int x;
+	void f();
+}
+class B: public A //A is base
+{
+public:
+	int y;
+	void p();
+}
+```
+	-![alt text](image/inheritance-1.png)
+	- casting
+		- up casting (Derived -> Base) //(B->A): convert B to A
+```c++
+B b;
+(A)b.x; //legal
+(A)b.y; //illegal
+```
+		- down casting (Base -> Derived) //is dangerous
+```c++
+A a;
+(B) a.y; //since a has no y, this doesn't work.
+(B) a.x; //this works.
+```
+	- don't use like `(B) a.x;`, use :
+		1. `static_cast`(invodke type convertion operator), 
+		2. `dynamic_cast`(between classes of the smae hierachy), 
+		3. `reinterpet_cast`(for pointers), 
+		4. `const_cast`(add, remove, modify the variable)
+	- example
+```c++
+char c;
+static_cast<int>(c);
+
+dynamic_cast<A>(b);
+```
+----
+
+#### virtual / polymorphism 虛擬/多型
+
+- virtual function is actually a real function. The existance of virtual function is for polymorphism.
+- polymorphism can store objects of different types together.
+```c++
+vector<Base *> pVec;
+Derived1 x;
+Derived2 y;
+pVec.push_back(&x);
+pVec.push_back(&y);
+for(auto& p: pVec)
+{
+	cout<<*p;
+}
+
+Base::operator<<
+{
+	this->y; //this won't work because y is in Derived2 not Base
+}
+```
+----
 
 ## Learning note from homework
+* [cppreference](https://en.cppreference.com/w/)
 * do-while loop executes funtions in the loop at least once
 * replace 'int a;' by 'auto a;' // let compiler to decide the type
 * try to make everything template and to make every type 'auto'
@@ -591,8 +961,29 @@ int main()
 		dis(gen); //get the random number
 	}
 ```
+
 * `const function` always has `const` at the end of function declaration, and it means "reading of a class variables is OK inside of the function, but writing inside of this function will generate a compiler error." In C++11, if you want to writes some variables in a "const function", mark these variable "mutable" first.
 * Use of `const`:
 	- `const int * p_num` === `int const * num`, declares that 'p_num' is a variable pointer to a constant integer.
 	- `int * const p_num` declares that 'p_num' is constant pointer to a variable integer
 	- `int const * const p_num` declares that 'p_num' is constant pointer to a constant integer.
+* `try` and `catch` can control the damage but make the program slower.
+
+
+----
+
+## To-Do List
+- while using template: typename VS class
+- type&non-type
+- container difference {set, list, vector, deque}
+- fina a way to do like 'for i in range(10)'
+- `future`
+- `packaged_task`
+- hw5 use inheritance
+- `lower_bound`, `upper_bound`, `equal_range`
+
+----
+
+## Book List
+- *C++ concurrency in action : practical multithreading*
+- *modern c++ design: generic programming and design atterns applied*
