@@ -871,33 +871,34 @@ for(auto&a : all_vector)
 
 #### C++ object model/inheritance (virtual, polymorphism)
 - inheritance
+	- example
 	```c++
-class A
-{
-public:
-	int x;
-	void f();
-}
-class B: public A //A is base
-{
-public:
-	int y;
-	void p();
-}
+	class A
+	{
+	public:
+		int x;
+		void f();
+	}
+	class B: public A //A is base
+	{
+	public:
+		int y;
+		void p();
+	}
 	```
 	-![alt text](image/inheritance-1.png)
 	- casting
 		- up casting (Derived -> Base) //(B->A): convert B to A
 		```c++
-B b;
-(A)b.x; //legal
-(A)b.y; //illegal
+		B b;
+		(A)b.x; //legal
+		(A)b.y; //illegal
 		```
 		- down casting (Base -> Derived) //is dangerous
 		```c++
-A a;
-(B) a.y; //since a has no y, this doesn't work.
-(B) a.x; //this works.
+		A a;
+		(B) a.y; //since a has no y, this doesn't work.
+		(B) a.x; //this works.
 		```
 	- don't use like `(B) a.x;`, use :
 		1. `static_cast`(invodke type convertion operator), 
@@ -905,12 +906,12 @@ A a;
 		3. `reinterpet_cast`(for pointers), 
 		4. `const_cast`(add, remove, modify the variable)
 	- example
-```c++
-char c;
-static_cast<int>(c);
+	```c++
+	char c;
+	static_cast<int>(c);
 
-dynamic_cast<A>(b);
-```
+	dynamic_cast<A>(b);
+	```
 ----
 
 #### virtual / polymorphism 虛擬/多型
