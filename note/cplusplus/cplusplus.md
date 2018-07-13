@@ -584,7 +584,7 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 		2. use `std::tuple` instead
 - `std::tuple`
 	- library: `#include < tuple >`
-```c++
+	```c++
 	template <class... Types>
 	class tuple
 	{
@@ -593,11 +593,11 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 	tuple<int, int, int> data;
 	std::get<0>(data) = 5;
 	auto a = std::get<0>(data);
-```
+	```
 	- HW8 : use `std::get`
 	- to get the size of tuple : `tuple_size`
 		- example
-```c++
+		```c++
 		#include <iostream>
 		#include <tuple>
 		template <class T>
@@ -611,7 +611,7 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 		{
 			test(std::make_tuple(1,2,3.14));
 		}
-```
+		```
 ----
 
 #### Sequence Container
@@ -625,40 +625,40 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 	// 'a.data()' is used to get the address of array. '&a' is not working in this place.
 ```
 - vector
-```c++
+	```c++
 	template<class T, class Alloc = std::allocator<T>> //Alloc: relate to data alignment. (speed)
 														// std::allocator, boost::aligned_alloc...
 	class vector{};
 
-```
+	```
 	- `push_back()` is always 'called by value' since it copies the value before push it into the vector, however, `emplace_back()` directly construct with the element in the place
 	- `resize()` can be used when releasing the memory while `reserve()` can be used at the beginning to get the well-estimated amount of memory
 		- `resize()` may not only change the size of the data but the location of it.
 	- swap to release skill
-```c++
+	```c++
 	vector<int> b;
 	a = std::move(b); //Using 'a' is actually using 'b'
-```
+	```
+	
 	- `std::swap`
-
 ----
 #### Associative Container
 - `std::set`
-```c++
+	```c++
 	template<class T, class Comp = std::less<T>>, class Alloc = allocator<T>>
 	class set
 	{};
 
 	std::set<int> a {1,2,3,4,-1}
-```
+	```
 - `std::multiset` is like 'set'
 - `std::map` :
 	- datatype is 'pair' (<'key', 'value'>)
 	- get thing from map : use '.find($key)' and you will get the pointer to the data in return
 - unordered_map
-```c++
+	```c++
 	template<class key, class T, class Hash = hash<key>, class Equal = equal_to<key>, class Alloc = ...>
-```
+	```
 - iterator
 	- random access : <, >, <= / += / []
 	- 	- bidirectional: decremental `a--`, `--a`
@@ -674,14 +674,14 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 - make compiler error message more readable
 - example
 
-```c++
+	```c++
 	boost::concepts
 	template<class T> requires std::less<T>
 	T min(T x, T y)
 	{
 		//...
 	}
-```
+	```
 
 ----
 
@@ -854,6 +854,8 @@ cout<<b<<c; // output "45"
 ```
 - thread
 	- like `bind`, always pass_by_value(need to copy)
+	- thread can't make sure when all the job will be done
+		- add `t.join();` //t is a thread
 ```c+
 vector<vector<int>> all_vector(10);
 void sort_vector(vector<int>&){}
@@ -863,14 +865,13 @@ for_each(all_vector.begin(), all_vector,end(), [](auto job){std::thread(sort_vec
 for(auto&a : all_vector)
 	std::thread(sort_vector, a);
 ```
-	- thread can't make sure when all the job will be done
-		- add `t.join();` //t is a thread
+	
 
 ----
 
 #### C++ object model/inheritance (virtual, polymorphism)
 - inheritance
-```c++
+	```c++
 class A
 {
 public:
@@ -883,21 +884,21 @@ public:
 	int y;
 	void p();
 }
-```
+	```
 	-![alt text](image/inheritance-1.png)
 	- casting
 		- up casting (Derived -> Base) //(B->A): convert B to A
-```c++
+		```c++
 B b;
 (A)b.x; //legal
 (A)b.y; //illegal
-```
+		```
 		- down casting (Base -> Derived) //is dangerous
-```c++
+		```c++
 A a;
 (B) a.y; //since a has no y, this doesn't work.
 (B) a.x; //this works.
-```
+		```
 	- don't use like `(B) a.x;`, use :
 		1. `static_cast`(invodke type convertion operator), 
 		2. `dynamic_cast`(between classes of the smae hierachy), 
