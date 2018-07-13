@@ -934,6 +934,99 @@ Base::operator<<
 	this->y; //this won't work because y is in Derived2 not Base
 }
 ```
+```c++
+class shape
+{
+	void display() virtual
+	{
+		cout<<"shape";
+	}
+};
+class Rect :public shape
+{
+	void display() virtual
+	{
+		cout<<"Rect";
+	}
+}
+class Square: public Rect
+{
+	void display_old()
+	{
+		shape::display();
+	}
+	void display() virtual
+	{
+		cout<<"Square";
+	}
+}
+
+int main()
+{
+	shape* p;
+	shape s;
+	Rect r;
+	Square ss;
+	p=&r; // get the virtual pointer to the virtual table of r
+	p.display(); //will display 'shape' if 'display()'in Rect is not declared as 'virtual'
+
+	B *tr = &ss
+	//want to do ptr->shape::area()
+	ptr->display(); //it doesn't work since it is declared virtual.
+	ptr->display_old(); //it works.
+}
+```
+----
+
+#### static polymorphism
+
+- CRTP: Curiously, Recurring, Template, Pattern
+- `boost::iterator`
+- example
+```c++
+template<class Derived>
+class A //Base
+{
+public:
+	void interface()
+	{
+		static_cast<Derived*>(this)->imp(); //convert type: A -> Derived
+	}
+};
+// Derived 1
+class B: public A<B>
+{
+public:
+	void imp()
+	{
+		cout<<"Derived1: B";
+	}
+};
+// Derived 2
+class C: public A<C>
+{
+public:
+	void imp()
+	{
+		cout<<"Derived2: C";
+	}
+};
+
+template <class T>
+void f(A<T> t)
+{
+	t.interface();
+}
+
+int main()
+{
+	B b;
+	C c;
+	f(b);
+	f(c);
+}
+```
+
 ----
 
 ## Learning note from homework
@@ -983,6 +1076,7 @@ int main()
 - `packaged_task`
 - hw5 use inheritance
 - `lower_bound`, `upper_bound`, `equal_range`
+- `Boost::any` : can store any type but not so fast
 
 ----
 
