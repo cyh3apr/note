@@ -1081,23 +1081,20 @@ f(expr); //deduce T and ParamType from expr
 	- case 1: ParamType is a Reference or Pointer, but not a Universal Reference	
 		- if *expr*'s type is a reference, ignore the reference part.
 	- case 2: ParamType is a Universal Reference
-
 	```c++
 	template<typename T>
 	void f(T&& param)//param is now a universal reference
 	```
-	
 		- if *expr* is an lvalue: both T and ParamYpe are deduced to be lvalue references.
 			- for example : `int x = 27; f(x);` -> x is lvalue, so T's and param's types are `int&`.
 		- if *expr* is rvalue: same as case 1.
 			- for example : `f(27);` -> 27 is rvalue, so T is `int`; param's type is `int&&`.
 	- case 3: ParamTye is neither a Pointer nor a Reference
-
 	```c++
 	template<typename T>
 	void f(T param); //param is passed by value
 	```
-	- ignore reference part, const part, and volatile.
+		- ignore reference part, const part, and volatile.
 
 
 
