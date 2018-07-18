@@ -1124,7 +1124,7 @@ f(expr); //deduce T and ParamType from expr
 	f1(someFunc); //param deduced as ptr-to-function; type is 'void (*)(int, double)'
 	f2(someFunc); //param deduced as ref-to-function; type is 'void (&)(int, double)'
 	```
-
+	
 - `decltype`
 	- `auto` will strip off the reference . `decltype(auto)` (in C++14) says that `decltype` rules should be used during the deduction, thus, it is able to truly return what we want to return. 
 	- Putting parentheses around a name can change the type that decltype reports for it.
