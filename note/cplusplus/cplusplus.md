@@ -1,5 +1,6 @@
 ## 2016 C++ 
 
+- [BOOK: EFFECTIVE MODERN C++](#Effective-Modern-C++11)
 ----
 #### Memory
 - type
@@ -584,7 +585,7 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 		2. use `std::tuple` instead
 - `std::tuple`
 	- library: `#include < tuple >`
-	```c++
+```c++
 	template <class... Types>
 	class tuple
 	{
@@ -593,11 +594,11 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 	tuple<int, int, int> data;
 	std::get<0>(data) = 5;
 	auto a = std::get<0>(data);
-	```
+```
 	- HW8 : use `std::get`
 	- to get the size of tuple : `tuple_size`
 		- example
-		```c++
+```c++
 		#include <iostream>
 		#include <tuple>
 		template <class T>
@@ -611,7 +612,7 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 		{
 			test(std::make_tuple(1,2,3.14));
 		}
-		```
+```
 ----
 
 #### Sequence Container
@@ -625,40 +626,40 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 	// 'a.data()' is used to get the address of array. '&a' is not working in this place.
 ```
 - vector
-	```c++
+```c++
 	template<class T, class Alloc = std::allocator<T>> //Alloc: relate to data alignment. (speed)
 														// std::allocator, boost::aligned_alloc...
 	class vector{};
 
-	```
+```
 	- `push_back()` is always 'called by value' since it copies the value before push it into the vector, however, `emplace_back()` directly construct with the element in the place
 	- `resize()` can be used when releasing the memory while `reserve()` can be used at the beginning to get the well-estimated amount of memory
 		- `resize()` may not only change the size of the data but the location of it.
 	- swap to release skill
-	```c++
+```c++
 	vector<int> b;
 	a = std::move(b); //Using 'a' is actually using 'b'
-	```
-	
+```
 	- `std::swap`
+
 ----
 #### Associative Container
 - `std::set`
-	```c++
+```c++
 	template<class T, class Comp = std::less<T>>, class Alloc = allocator<T>>
 	class set
 	{};
 
 	std::set<int> a {1,2,3,4,-1}
-	```
+```
 - `std::multiset` is like 'set'
 - `std::map` :
 	- datatype is 'pair' (<'key', 'value'>)
 	- get thing from map : use '.find($key)' and you will get the pointer to the data in return
 - unordered_map
-	```c++
+```c++
 	template<class key, class T, class Hash = hash<key>, class Equal = equal_to<key>, class Alloc = ...>
-	```
+```
 - iterator
 	- random access : <, >, <= / += / []
 	- 	- bidirectional: decremental `a--`, `--a`
@@ -674,14 +675,14 @@ void f(T ... a) // this "..." tells compiler to expand the parameter pack T
 - make compiler error message more readable
 - example
 
-	```c++
+```c++
 	boost::concepts
 	template<class T> requires std::less<T>
 	T min(T x, T y)
 	{
 		//...
 	}
-	```
+```
 
 ----
 
@@ -854,8 +855,6 @@ cout<<b<<c; // output "45"
 ```
 - thread
 	- like `bind`, always pass_by_value(need to copy)
-	- thread can't make sure when all the job will be done
-		- add `t.join();` //t is a thread
 ```c+
 vector<vector<int>> all_vector(10);
 void sort_vector(vector<int>&){}
@@ -865,53 +864,53 @@ for_each(all_vector.begin(), all_vector,end(), [](auto job){std::thread(sort_vec
 for(auto&a : all_vector)
 	std::thread(sort_vector, a);
 ```
-	
+	- thread can't make sure when all the job will be done
+		- add `t.join();` //t is a thread
 
 ----
 
 #### C++ object model/inheritance (virtual, polymorphism)
 - inheritance
-	- example
-	```c++
-	class A
-	{
-	public:
-		int x;
-		void f();
-	}
-	class B: public A //A is base
-	{
-	public:
-		int y;
-		void p();
-	}
-	```
+```c++
+class A
+{
+public:
+	int x;
+	void f();
+}
+class B: public A //A is base
+{
+public:
+	int y;
+	void p();
+}
+```
 	-![alt text](image/inheritance-1.png)
 	- casting
 		- up casting (Derived -> Base) //(B->A): convert B to A
-		```c++
-		B b;
-		(A)b.x; //legal
-		(A)b.y; //illegal
-		```
+```c++
+B b;
+(A)b.x; //legal
+(A)b.y; //illegal
+```
 		- down casting (Base -> Derived) //is dangerous
-		```c++
-		A a;
-		(B) a.y; //since a has no y, this doesn't work.
-		(B) a.x; //this works.
-		```
+```c++
+A a;
+(B) a.y; //since a has no y, this doesn't work.
+(B) a.x; //this works.
+```
 	- don't use like `(B) a.x;`, use :
 		1. `static_cast`(invodke type convertion operator), 
 		2. `dynamic_cast`(between classes of the smae hierachy), 
 		3. `reinterpet_cast`(for pointers), 
 		4. `const_cast`(add, remove, modify the variable)
 	- example
-	```c++
-	char c;
-	static_cast<int>(c);
+```c++
+char c;
+static_cast<int>(c);
 
-	dynamic_cast<A>(b);
-	```
+dynamic_cast<A>(b);
+```
 ----
 
 #### virtual / polymorphism 虛擬/多型
@@ -1063,6 +1062,44 @@ int main()
 	- `int * const p_num` declares that 'p_num' is constant pointer to a variable integer
 	- `int const * const p_num` declares that 'p_num' is constant pointer to a constant integer.
 * `try` and `catch` can control the damage but make the program slower.
+
+----
+<a id="Effective-Modern-C++11"></a>
+## Effective Modern C++11
+
+#### Deducing Types
+
+```c++
+template<typename T>
+void f(ParamType param)
+
+f(expr); //deduce T and ParamType from expr
+```
+
+- T is dependent on the type of *expr* and the form of *ParamType*.
+	- "Universal Reference" : 可以同時提供lvalue和rvalue窗口. Such parameters are declared like rvalue references, but they behave differently when lvalue arguments are passed in.
+	- case 1: ParamType is a Reference or Pointer, but not a Universal Reference	
+		- if *expr*'s type is a reference, ignore the reference part.
+	- case 2: ParamType is a Universal Reference
+
+	```c++
+	template<typename T>
+	void f(T&& param)//param is now a universal reference
+	```
+	
+		- if *expr* is an lvalue: both T and ParamYpe are deduced to be lvalue references.
+			- for example : `int x = 27; f(x);` -> x is lvalue, so T's and param's types are `int&`.
+		- if *expr* is rvalue: same as case 1.
+			- for example : `f(27);` -> 27 is rvalue, so T is `int`; param's type is `int&&`.
+	- case 3: ParamTye is neither a Pointer nor a Reference
+
+	```c++
+	template<typename T>
+	void f(T param); //param is passed by value
+	```
+	- ignore reference part, const part, and volatile.
+
+
 
 
 ----
