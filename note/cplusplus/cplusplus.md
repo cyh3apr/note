@@ -1128,21 +1128,19 @@ f(expr); //deduce T and ParamType from expr
 - `decltype`
 	- `auto` will strip off the reference . `decltype(auto)` (in C++14) says that `decltype` rules should be used during the deduction, thus, it is able to truly return what we want to return. 
 	- Putting parentheses around a name can change the type that decltype reports for it.
-		- 
-		```c++
-		decltype(auto) f1()
-		{
-			int x = 0;
-			return x; //decltype(x) is int, so f1 returns int
-		}
-
-		decltype(auto) f2()
-		{
-			int x = 0;
-			return (x); //decltype((x)) is int&, so f2 returns int&
-						//return a reference to a local variable
-		}
-		```
+	```c++
+	decltype(auto) f1()
+	{
+		int x = 0;
+		return x; //decltype(x) is int, so f1 returns int
+	}
+	decltype(auto) f2()
+	{
+		int x = 0;
+		return (x); //decltype((x)) is int&, so f2 returns int&
+					//return a reference to a local variable
+	}
+	```
 ----
 
 ## To-Do List
